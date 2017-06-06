@@ -1,0 +1,37 @@
+{
+  "name": "tinybook",
+  "version": "1.0.0",
+  "description": "An express server that mocks basic facebook functionality for use in http level testing. Proxies unknown requests through to facebook.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/neilsarkar/tinybook.git"
+  },
+  "keywords": [
+    "fakebook",
+    "facebook",
+    "mock",
+    "server",
+    "http",
+    "tests"
+  ],
+  "author": "Neil Sarkar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/neilsarkar/tinybook/issues"
+  },
+  "homepage": "https://github.com/neilsarkar/tinybook#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.4.2",
+    "request-promise": "^4.2.1"
+  }
+}
