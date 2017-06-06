@@ -72,8 +72,15 @@ app.get('/me/friends', function(req, res) {
   })
 })
 
-module.exports = function(port) {
-  const server = app.listen(port);
-  let handle   = server.close.bind(server);
-  return handle;
+if( module.parent ) {
+  module.exports = function(port) {
+    const server = app.listen(port);
+    let handle   = server.close.bind(server);
+    return handle;
+  }
+} else {
+  const port = process.env.PORT || 4200
+  app.listen(port, function() {
+    console.log(`fakebook listening on ${port}...`);
+  });
 }
