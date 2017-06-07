@@ -3,6 +3,7 @@
 const express    = require('express');
 const bodyParser = require('body-parser');
 const request    = require('request');
+const _          = require('lodash');
 const app        = express();
 
 var users = {};
@@ -14,7 +15,12 @@ app.post('/users', function(req, res) {
   const id          = seq++;
   const accessToken = `FAKEBOOK${id}`;
 
-  users[accessToken] = Object.assign(req.body, {id: String(id)});
+  const user = Object.assign({}, req.body, {id: String(id)})
+  if( !user.name ) { user.name = 'Sancho Panza' }
+  user.first_name = user.name.split(' ')[0]
+  user.last_name = user.name.split(' ').slice(1).join(' ')
+
+  users[accessToken] = user;
   res.json({
     access_token: accessToken,
     id: id,
@@ -61,7 +67,16 @@ app.get('/me', function(req, res) {
     });
   }
 
-  res.json(user);
+  user.permissions = {data: []}
+  user.picture = { data: { url: 'https://placehold.it/256x256' }}
+
+  const fields = ['id', 'name'].concat(
+    (req.query.fields || '').split(',')
+  ).concat(
+    (req.query.fields || '').match(/picture/) ? 'picture' : null
+  )
+
+  res.json(_.pick(user, fields));
 })
 
 app.get('/me/friends', function(req, res) {

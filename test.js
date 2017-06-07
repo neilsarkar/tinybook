@@ -42,11 +42,27 @@ describe("fakebook", function() {
     return api.post('/users', {body: {name: 'neil', cool: 'great'}}).then(function(r) {
       expect(r.body.access_token).toExist(`Missing access token in ${JSON.stringify(r.body)}`);
       fbToken = r.body.access_token;
-      return api.get(`/me?access_token=${fbToken}`)
+      return api.get(`/me?access_token=${fbToken}&fields=cool`)
     }).then(function(r) {
       expect(r.body.name).toEqual('neil');
       expect(r.body.cool).toEqual('great');
       expect(r.body.id).toExist();
+    })
+  });
+
+  it("returns selected fields", function () {
+    var fbToken;
+
+    return api.post('/users', {body: {name: 'neil', email: 'neil@coolio.com'}}).then(function(r) {
+      expect(r.body.access_token).toExist(`Missing access token in ${JSON.stringify(r.body)}`);
+      fbToken = r.body.access_token;
+      return api.get(`/me?access_token=${fbToken}&fields=id,name,email,picture.width(256).height(256),permissions`)
+    }).then(function(r) {
+      expect(r.body.name).toEqual('neil');
+      expect(r.body.email).toEqual('neil@coolio.com');
+      expect(r.body.id).toExist();
+      expect(r.body.permissions && r.body.permissions.data).toExist(`Expected permissions in ${JSON.stringify(r.body)}`)
+      expect(r.body.picture && r.body.picture.data && r.body.picture.data.url).toExist(`Expected picture in ${JSON.stringify(r.body)}`)
     })
   });
 
